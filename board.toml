@@ -44,6 +44,10 @@ archives = [
   "build-arm-driver.py ArmCpu",
   "build-arm-driver.py NativeAES",
   "build-native-aes-bindings.py",
+  # Generates build/storage-abi/{interface-audit.json,include/...}. Without it
+  # build-arm-driver.py NativeUfs has no IOKit/storage header to compile
+  # against and build-native-virtio-bindings.py has no audit to read.
+  "audit-storage-interface.py",
   "build-arm-driver.py NativeUfs",
   "build-arm-driver.py NativeVirtioBlock",
   "build-arm-driver.py NativeRamBlock",
