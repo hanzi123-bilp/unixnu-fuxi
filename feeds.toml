@@ -7,12 +7,12 @@
 # tree and the archive step dies with:
 #     fatal: cannot change to '.../tree/refer/IOStorageFamily'
 #
-# Tag picked as the newest IOStorageFamily release; the audit only needs the
+# Tag pinned to the revision audit-storage-interface.py asserts; the audit only needs the
 # IOBlockStorageDevice interface description, not an exact Darwin 23 match.
 
 [[source]]
 name = "IOStorageFamily"
 kind = "refer"
 git = "https://github.com/apple-oss-distributions/IOStorageFamily.git"
-ref = "IOStorageFamily-337.100.1"
-commit = "7edb88fbae296fb7c8ce2f64e115e116e566d51c"
+ref = "IOStorageFamily-315"
+commit = "e45fbe30a7879e0b16e26dddb78538f1b00e0bff"
