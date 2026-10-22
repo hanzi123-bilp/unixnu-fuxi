@@ -31,7 +31,10 @@ while i < len(args):
     i += 1
 command += ['-DXNU_BOOT_PROGRESS=1', '-mgeneral-regs-only', '-Wall', '-Wextra', '-Werror',
             '-I', str(ROOT / '.cache/xnu-work/osfmk'),
-            '-I', str(ROOT / 'uefi-sheng/Silicon/Silicium/SiliciumPkg/Library/FrameBufferSerialPortLib')]
+            # Font.h and FrameBuffer.h are vendored into this device package;
+            # pointing at a sibling uefi-sheng checkout only works on the
+            # author's machine.
+            '-I', str(ROOT / 'kits/sheng')]
 subprocess.run(command, cwd=record['directory'], check=True, timeout=90)
 (OUT / 'compile-command.json').write_text(json.dumps(command,indent=2)+'\n')
 fault_source = ROOT / 'kits/sheng/BootFaultProbe.c'
