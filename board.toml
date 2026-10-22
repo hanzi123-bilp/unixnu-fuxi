@@ -1,4 +1,4 @@
-﻿# Board description of the Xiaomi Pad 6S Pro (sheng, SM8550), read by the unixnu build driver.
+# Board description of the Xiaomi Pad 6S Pro (sheng, SM8550), read by the unixnu build driver.
 
 [board]
 name = "fuxi"
