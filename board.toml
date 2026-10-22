@@ -51,7 +51,6 @@ archives = [
   "build-native-aes-bindings.py",
   "build-boot-progress.py",
   "build-libpthread-kernel.py",
-  "build-native-legacy-display.py",
   "build-legacy-stub.py",
 ]
 
