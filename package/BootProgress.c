@@ -1183,3 +1183,26 @@ size_t boot_progress_profile_rows(char *out,size_t cap) {
 #undef BP_ROW
   return at;
 }
+
+
+/*
+ * Bring-up stubs for the legacy display hooks.
+ *
+ * bsd_init references these unconditionally. Their real implementations come
+ * from build-native-legacy-display.py, which needs a prelink candidate that
+ * cannot exist before the kernel links. Defining them here guarantees the
+ * symbols exist whenever boot progress is linked, independent of archive order.
+ */
+void
+native_legacy_display_probe (
+  void
+  )
+{
+}
+
+void
+native_legacy_display_late_probe (
+  void
+  )
+{
+}
