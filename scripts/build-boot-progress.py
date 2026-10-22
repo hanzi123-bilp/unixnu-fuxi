@@ -71,10 +71,54 @@ stub_command = [str(stub_source) if arg == str(policy_source)
                 for arg in policy_command]
 subprocess.run(stub_command, cwd=policy_record['directory'], check=True, timeout=90)
 
+def compile_like(record, source, destination, extra):
+    """Compile one source with the flags of a recorded XNU compile."""
+    command, index = [], 0
+    arguments = record['arguments']
+    while index < len(arguments):
+        value = arguments[index]
+        if value == record['file']:
+            command.append(str(source))
+        elif value == '-o':
+            command += ['-o', str(destination)]
+            index += 1
+        elif value in ('-MF', '-MT', '-MJ'):
+            index += 1
+        elif value == '-Xclang' and arguments[index + 1].startswith('-W'):
+            index += 1
+        elif not value.startswith('-W'):
+            command.append(value)
+        index += 1
+    command += extra
+    subprocess.run(command, cwd=record['directory'], check=True, timeout=90)
+    return destination
+
+
+# Stage 2a: the kernel references the virtio transport, the owner root and the
+# sheng power poll because boot progress selects them, but their archives need
+# inputs that no repository carries (a live storage capture, a completed
+# verification of the original OS volume). The definitions below report absence;
+# the VerifiedRoot code itself is linked from its real sources so a policy bundle
+# would still be verified by the kit, not by this file.
+storage_source = ROOT / 'kits/sheng/StageAStorageStubs.c'
+storage_obj = compile_like(policy_record, storage_source, OUT / 'StageAStorageStubs.o',
+                           ['-mgeneral-regs-only', '-Wall', '-Wextra', '-Werror', '-Wno-unused-parameter'])
+verified_root_dir = ROOT / 'kits/VerifiedRoot'
+verified_root_objects = []
+for source in (verified_root_dir / 'src/verified_root.c', verified_root_dir / 'adapters/xnu_crypto.c'):
+    destination = compile_like(policy_record, source, OUT / (source.stem + '.o'),
+                               ['-I', str(verified_root_dir / 'include')])
+    verified_root_objects.append(destination)
+
 archive = OUT / 'libBootProgress.a'
 archive.unlink(missing_ok=True)
-subprocess.run(['xcrun', 'ar', 'rcs', str(archive), str(obj), str(fault_obj), str(policy_obj), str(stub_obj)], check=True, timeout=30)
+objects = [obj, fault_obj, policy_obj, stub_obj, storage_obj, *verified_root_objects]
+subprocess.run(['xcrun', 'ar', 'rcs', str(archive)] + [str(o) for o in objects], check=True, timeout=30)
 (OUT / 'build-report.json').write_text(json.dumps({
+    'storage_stub_sha256': hashlib.sha256(storage_source.read_bytes()).hexdigest(),
+    'verified_root_source_sha256': {
+        str(p.relative_to(verified_root_dir)): hashlib.sha256(p.read_bytes()).hexdigest()
+        for p in (verified_root_dir / 'src/verified_root.c', verified_root_dir / 'adapters/xnu_crypto.c')},
     'watchdog_policy_sha256': hashlib.sha256(policy_source.read_bytes()).hexdigest(),
     'fault_sha256': hashlib.sha256(fault_source.read_bytes()).hexdigest(),
     'source_sha256': hashlib.sha256(source.read_bytes()).hexdigest(),
