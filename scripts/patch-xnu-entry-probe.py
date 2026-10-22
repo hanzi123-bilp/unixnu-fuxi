@@ -181,6 +181,14 @@ def assemble_c(source, va, workdir, symbols):
     nm = shutil.which('llvm-nm') or '/opt/homebrew/opt/llvm/bin/llvm-nm'
     # UNIXNU_UEFI is the Mu-Silicium checkout when the unixnu driver runs this script.
     font_dir = Path(os.environ.get('UNIXNU_UEFI') or ROOT / 'uefi-sheng') / 'Silicon/Silicium/SiliciumPkg/Library/FrameBufferSerialPortLib'
+    if not (font_dir / 'Font.h').is_file():
+        # The firmware checkout is shallow and does not initialize Silicon/, so the
+        # UEFI tree usually has no FrameBufferSerialPortLib. The two headers it
+        # provides are vendored into this package, which is what a device build
+        # without --uefi uses as well.
+        vendored = ROOT / 'kits/sheng'
+        if (vendored / 'Font.h').is_file() and (vendored / 'FrameBuffer.h').is_file():
+            font_dir = vendored
     obj, elf, binary = (workdir / name for name in ('panic.o', 'panic.elf', 'panic.bin'))
     definitions = []
     for macro, name, width in (('MAX_MEM', '_max_mem', 8),
