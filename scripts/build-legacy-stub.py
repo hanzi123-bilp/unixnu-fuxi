@@ -46,15 +46,3 @@ archive = OUT / 'libLegacyStub.a'
 archive.unlink(missing_ok=True)
 subprocess.run(['xcrun', 'ar', 'rcs', str(archive), str(obj)], check=True, timeout=30)
 print(f'legacy stub archive: {archive}')
-
-# Which archive ends up on the kernel link line is not something this device
-# repository controls, and a static library listed before the object that needs
-# it is never searched twice. Put the stub object into every archive we built
-# so the symbol is found whichever one the link pulls in.
-added = 0
-for other in sorted((ROOT / 'build').glob('*/lib*.a')):
-    if other == archive:
-        continue
-    subprocess.run(['xcrun', 'ar', 'rcs', str(other), str(obj)], check=True, timeout=30)
-    added += 1
-print(f'legacy stub object added to {added} other archives')
