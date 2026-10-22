@@ -103,6 +103,9 @@ def compile_like(record, source, destination, extra):
 storage_source = ROOT / 'kits/sheng/StageAStorageStubs.c'
 storage_obj = compile_like(policy_record, storage_source, OUT / 'StageAStorageStubs.o',
                            ['-mgeneral-regs-only', '-Wall', '-Wextra', '-Werror', '-Wno-unused-parameter'])
+probe_source = ROOT / 'kits/sheng/StageAProbeStubs.c'
+probe_obj = compile_like(policy_record, probe_source, OUT / 'StageAProbeStubs.o',
+                         ['-mgeneral-regs-only', '-Wall', '-Wextra', '-Werror', '-Wno-unused-parameter'])
 verified_root_dir = ROOT / 'kits/VerifiedRoot'
 verified_root_objects = []
 for kit_source in (verified_root_dir / 'src/verified_root.c', verified_root_dir / 'adapters/xnu_crypto.c'):
@@ -112,10 +115,11 @@ for kit_source in (verified_root_dir / 'src/verified_root.c', verified_root_dir 
 
 archive = OUT / 'libBootProgress.a'
 archive.unlink(missing_ok=True)
-objects = [obj, fault_obj, policy_obj, stub_obj, storage_obj, *verified_root_objects]
+objects = [obj, fault_obj, policy_obj, stub_obj, storage_obj, probe_obj, *verified_root_objects]
 subprocess.run(['xcrun', 'ar', 'rcs', str(archive)] + [str(o) for o in objects], check=True, timeout=30)
 (OUT / 'build-report.json').write_text(json.dumps({
     'storage_stub_sha256': hashlib.sha256(storage_source.read_bytes()).hexdigest(),
+    'probe_stub_sha256': hashlib.sha256(probe_source.read_bytes()).hexdigest(),
     'verified_root_source_sha256': {
         str(p.relative_to(verified_root_dir)): hashlib.sha256(p.read_bytes()).hexdigest()
         for p in (verified_root_dir / 'src/verified_root.c', verified_root_dir / 'adapters/xnu_crypto.c')},
