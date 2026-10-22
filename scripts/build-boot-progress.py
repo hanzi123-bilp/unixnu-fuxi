@@ -105,8 +105,8 @@ storage_obj = compile_like(policy_record, storage_source, OUT / 'StageAStorageSt
                            ['-mgeneral-regs-only', '-Wall', '-Wextra', '-Werror', '-Wno-unused-parameter'])
 verified_root_dir = ROOT / 'kits/VerifiedRoot'
 verified_root_objects = []
-for source in (verified_root_dir / 'src/verified_root.c', verified_root_dir / 'adapters/xnu_crypto.c'):
-    destination = compile_like(policy_record, source, OUT / (source.stem + '.o'),
+for kit_source in (verified_root_dir / 'src/verified_root.c', verified_root_dir / 'adapters/xnu_crypto.c'):
+    destination = compile_like(policy_record, kit_source, OUT / (kit_source.stem + '.o'),
                                ['-I', str(verified_root_dir / 'include')])
     verified_root_objects.append(destination)
 
