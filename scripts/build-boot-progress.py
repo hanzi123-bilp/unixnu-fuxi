@@ -62,9 +62,18 @@ while j < len(policy_args):
 policy_command += ['-mgeneral-regs-only', '-Wall', '-Wextra', '-Werror']
 subprocess.run(policy_command, cwd=policy_record['directory'], check=True, timeout=90)
 
+# Stage 2a: satisfy the legacy display hooks the kernel references. The real
+# archive needs a prelink candidate, which does not exist before this link.
+stub_source = ROOT / 'kits/sheng/LegacyDisplayStub.c'
+stub_obj = OUT / 'LegacyDisplayStub.o'
+stub_command = [str(stub_source) if arg == str(policy_source)
+                else str(stub_obj) if arg == str(policy_obj) else arg
+                for arg in policy_command]
+subprocess.run(stub_command, cwd=policy_record['directory'], check=True, timeout=90)
+
 archive = OUT / 'libBootProgress.a'
 archive.unlink(missing_ok=True)
-subprocess.run(['xcrun', 'ar', 'rcs', str(archive), str(obj), str(fault_obj), str(policy_obj)], check=True, timeout=30)
+subprocess.run(['xcrun', 'ar', 'rcs', str(archive), str(obj), str(fault_obj), str(policy_obj), str(stub_obj)], check=True, timeout=30)
 (OUT / 'build-report.json').write_text(json.dumps({
     'watchdog_policy_sha256': hashlib.sha256(policy_source.read_bytes()).hexdigest(),
     'fault_sha256': hashlib.sha256(fault_source.read_bytes()).hexdigest(),
