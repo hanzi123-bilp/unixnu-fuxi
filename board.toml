@@ -159,8 +159,11 @@ kernel_args = [
   "boot-progress=2",
   "-apfs_shared_datavolume",
   "offline-key-events=1",
-  "native-ufs-root=1",
-  "sheng-pmgr=2",
+  # First boot carries no storage stack: the owner root and the PMGR integration
+  # are not linked yet (package/StageAStorageStubs.c), so the UFS root path and
+  # the AMFI PMGR gate stay off. Boot progress draws before any root mount.
+  # "native-ufs-root=1",
+  # "sheng-pmgr=2",
   "armcpu-diagnostics=1",
   "sheng-disable-watchdogd=1",
   "sheng-disable-jobs=com.apple.identityservicesd,com.apple.locationd,com.apple.CommCenter,com.apple.bluetoothd",
