@@ -17,6 +17,6 @@ CONFIG_XNU_BOOT_PROGRESS=y
 # audit-storage-interface.py's live capture, which no repository carries. With the
 # driver off, boot progress draws zero block counts; the kernel still boots and
 # reports the missing root on screen.
-CONFIG_XNU_NATIVE_UFS=n
+CONFIG_XNU_NATIVE_UFS=y
 CONFIG_XNU_CRYPTO_BOOTSTRAP="prelinked"
 CONFIG_XNU_EXTRA_LD_ARCHIVES="{tree}/build/legacy-stub/libLegacyStub.a"
