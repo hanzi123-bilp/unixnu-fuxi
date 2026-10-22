@@ -191,7 +191,7 @@ root_match_volume_uuid = "04769D26-2CA0-4825-B443-E2E5F88300F2"
 cpu_regs = "0,0x100,0x200,0x300,0x400,0x500,0x600,0x700"
 packed_data_ramdisk = true
 ipad_identity = true
-unique_chip_id = "0x65776a976f4771da"   # generated for this board; the ADT platform seed, not a hardware id
+unique_chip_id = "required"          # the seed is passed with --unique-chip-id (or UNIXNU_UNIQUE_CHIP_ID)
 
 # Image parameters come from the Mu-Silicium device config; [bootimg.image] would override them.
 
