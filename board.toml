@@ -132,7 +132,7 @@ loader = "firmware"
 title = "fuxi first boot: source 4K XNU to console"
 dram_size = "0x80000000"             # SMEM RAM table observed on the device
 skip_setup_tool = "scripts/seed-data-skip-setup.py"   # used by --skip-setup
-panic_screen = true                  # patch panic() screen output into the payload copy of the kernel
+panic_screen = false                 # the panic screen needs a free __TEXT cave; this kernel's layout has none yet (Padding at 0xfffffff0073e9500 is not empty)
 # The original static/System trust caches, and the owner trust bundle built around them.
 trust_cache_sha256 = [
   "7416ca4f8377146626bb284e2133c76bee6cb4e3ee0af5d648b186235a7323a7",
