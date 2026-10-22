@@ -94,6 +94,17 @@ volatile uint32_t native_legacy_swap_validation_reason;
 volatile uint32_t native_legacy_swap_validation_result;
 volatile uint64_t native_legacy_transfer_bytes;
 volatile uint32_t native_legacy_transfer_calls;
+volatile uint64_t native_ufs_block_failures;
+volatile uint64_t native_ufs_block_reads;
+volatile uint32_t native_ufs_blocks_published;
+volatile uint32_t native_ufs_integrity_failures;
+volatile uint32_t native_ufs_matched;
+volatile uint32_t native_ufs_probe_calls;
+volatile uint64_t native_ufs_read_ticks;
+const char *volatile native_ufs_root_failure;
+volatile uint32_t native_ufs_root_step;
+volatile uint64_t native_ufs_verified_blocks;
+volatile uint64_t native_ufs_verify_ticks;
 volatile unsigned native_wi_count;
 char native_wi_log[4][100];
 
@@ -160,4 +171,16 @@ boot_log_tick (
   )
 {
   (void)tick;
+}
+
+/* No UFS driver: the progress line is empty rather than a lie about blocks. */
+void
+native_ufs_progress_text (
+  char *text,
+  size_t size
+  )
+{
+  if (text != NULL && size > 0) {
+    text[0] = '\0';
+  }
 }
