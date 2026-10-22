@@ -12,10 +12,6 @@
  * exist before the kernel links. Defined here, right after the includes, so
  * they are never inside a conditional block.
  */
-void native_legacy_display_probe(void);
-void native_legacy_display_late_probe(void);
-void native_legacy_display_probe(void) {}
-void native_legacy_display_late_probe(void) {}
 #include <pexpert/pexpert.h>
 #include <kern/thread.h>
 #include <kern/clock.h>
