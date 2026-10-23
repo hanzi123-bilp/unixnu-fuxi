@@ -13,37 +13,37 @@
   <a href="https://x.com/unixnu"><img alt="X" src="https://img.shields.io/badge/X-@unixnu-000000?logo=x&logoColor=white"></a>
 </p>
 
-# UniXNU-sheng
+# UniXNU-fuxi
 
-Device repository for the Xiaomi Pad 6S Pro (sheng, SM8550). It holds the board file, kernel defconfig, device scripts, drivers and package.
+Device repository for the Xiaomi Pad 6S Pro (fuxi, SM8550). It holds the board file, kernel defconfig, device scripts, drivers and package.
 
-🎉 **News:** The native Metal GPU driver is fully working on sheng. The render server composites the system UI through the Adreno 740, and listed processes get their own Metal devices.
+🎉 **News:** The native Metal GPU driver is fully working on fuxi. The render server composites the system UI through the Adreno 740, and listed processes get their own Metal devices.
 
 - [Documentation](https://unixnu.com)
-- [Device page](https://unixnu.com/devices/sheng)
+- [Device page](https://unixnu.com/devices/fuxi)
 - [Porting guide](https://unixnu.com/porting/)
 - [Build](https://unixnu.com/building)
 
-Firmware: [uefi-sheng](https://github.com/UniXNU/uefi-sheng).
+Firmware: [uefi-fuxi](https://github.com/UniXNU/uefi-fuxi).
 
 Build with the `unixnu` driver of [UniXNU](https://github.com/UniXNU/UniXNU). Clone both repositories with `--recurse-submodules`; `unixnu fetch` also updates the module submodules.
 
 ## Build
 
-Run these commands from the UniXNU checkout. The device repository is `../UniXNU-sheng`.
+Run these commands from the UniXNU checkout. The device repository is `../UniXNU-fuxi`.
 
 ```sh
-./unixnu defconfig sheng_defconfig -D ../UniXNU-sheng
+./unixnu defconfig fuxi_defconfig -D ../UniXNU-fuxi
 ./unixnu fetch
 ./unixnu ipsw fetch
 ./unixnu build kernel
 ./unixnu build package
-./unixnu build firmware --uefi ../uefi-sheng
-./unixnu build payload --unique-chip-id <hex> --trust-cache <bundle> --data-ramdisk <seed>
-./unixnu bootimg --uefi ../uefi-sheng --dtb <sheng.dtb>
+./unixnu build firmware --uefi ../uefi-fuxi
+cd ../uefi-fuxi
+python3 uefi-fuxi/scripts/bootimage.py
 ```
 
-The [device page](https://unixnu.com/devices/sheng#build) adds the userdata image and the Data seed growth commands. The platform seed, trust cache and Data seed are device inputs. Use `--owner-trust-cache <bundle>` for an owner-signed bundle.
+The [device page](https://unixnu.com/devices/fuxi#build) adds the userdata image and the Data seed growth commands. The platform seed, trust cache and Data seed are device inputs. Use `--owner-trust-cache <bundle>` for an owner-signed bundle.
 
 Without a Mac, run the kernel and userdata steps in the [macOS runner workflow](https://github.com/UniXNU/UniXNU/actions/workflows/macos.yml). The [build guide](https://unixnu.com/building#macos-runner) lists its inputs.
 

@@ -200,10 +200,6 @@ unique_chip_id = "required"          # the platform seed is not stored in any re
 
 # Image parameters come from the Mu-Silicium device config; [bootimg.image] would override them.
 
-# The stock ABL powers the panel off when the device tree has no splash region, so add it.
-[[bootimg.dtb_node]]
-path = "/reserved-memory/splash_region"
-props = [
-  { name = "label", type = "s", value = "cont_splash_region" },
-  { name = "reg", type = "x", value = ["0x0", "0xb8000000", "0x0", "0x2b00000"] },
-]
+# fuxi.dtb already contains /reserved-memory/splash_region, so do not add it again.
+# The legacy `unixnu bootimg` node patch fails on that node with FDT_ERR_EXISTS;
+# `unixnu bootimage` packs the live tree as-is and tolerates nodes that already exist.
