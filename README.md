@@ -39,8 +39,7 @@ Run these commands from the UniXNU checkout. The device repository is `../UniXNU
 ./unixnu build kernel
 ./unixnu build package
 ./unixnu build firmware --uefi ../uefi-sheng
-./unixnu build payload --unique-chip-id <hex> --trust-cache <bundle> --data-ramdisk <seed>
-./unixnu bootimg --uefi ../uefi-sheng --dtb <sheng.dtb>
+python3 uefi-fuxi/scripts/bootimage.py
 ```
 
 The [device page](https://unixnu.com/devices/sheng#build) adds the userdata image and the Data seed growth commands. The platform seed, trust cache and Data seed are device inputs. Use `--owner-trust-cache <bundle>` for an owner-signed bundle.
